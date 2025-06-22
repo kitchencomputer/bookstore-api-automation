@@ -25,17 +25,17 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install --upgrade pip
-          pip install -r bookstore/bookstore/requirements.txt
+          pip install -r bookstore/requirements.txt
 
       - name: Install Node.js dependencies
         working-directory: ./tests
         run: npm install
 
       - name: Remove old test DB
-        run: rm -f bookstore/bookstore/test.db
+        run: rm -f bookstore/test.db
 
       - name: Start FastAPI app
-        working-directory: ./bookstore/bookstore
+        working-directory: ./bookstore
         run: |
           nohup uvicorn main:app --host 0.0.0.0 --port 8000 &
           sleep 10
