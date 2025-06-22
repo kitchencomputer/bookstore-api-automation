@@ -31,6 +31,9 @@ jobs:
         working-directory: ./tests
         run: npm install
 
+      - name: Remove old test DB
+        run: rm -f bookstore/bookstore/test.db
+
       - name: Start FastAPI app
         working-directory: ./bookstore/bookstore
         run: |
