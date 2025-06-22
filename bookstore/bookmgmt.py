@@ -3,15 +3,15 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from database import Book  # Assuming this is defined in your models.py
-from database import get_db
+from database import Book, BookCreate, BookUpdate, get_db
 from middleware import JWTBearer
 
 router = APIRouter()
 
 
 @router.post("/books/", response_model=Book, dependencies=[Depends(JWTBearer())])
-async def create_book(book: Book, db: Session = Depends(get_db)):
+async def create_book(book_data: BookCreate, db: Session = Depends(get_db)):
+    book = Book(**book_data.dict())
     db.add(book)
     db.commit()
     db.refresh(book)
@@ -19,7 +19,7 @@ async def create_book(book: Book, db: Session = Depends(get_db)):
 
 
 @router.put("/books/{book_id}", response_model=Book, dependencies=[Depends(JWTBearer())])
-async def update_book(book_id: int, update_data: Book, db: Session = Depends(get_db)):
+async def update_book(book_id: int, update_data: BookUpdate, db: Session = Depends(get_db)):
     db_book = db.query(Book).filter(Book.id == book_id).first()
     if db_book is None:
         raise HTTPException(status_code=404, detail="Book not found")

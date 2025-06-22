@@ -24,7 +24,10 @@ class JWTBearer(HTTPBearer):
 
     def verify_jwt(self, jwtoken: str) -> bool:
         try:
+            print(f"Verifying token: {jwtoken[:20]}") 
             payload = jwt.decode(jwtoken, SECRET_KEY, algorithms=[ALGORITHM])
+            print(f"Token valid, payload: {payload}")
             return True
-        except PyJWTError:
+        except PyJWTError as e:
+            print(f"JWT validation failed: {e}")
             return False
